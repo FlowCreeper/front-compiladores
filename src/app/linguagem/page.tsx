@@ -8,10 +8,10 @@ export default function Linguagem() {
 
   const sendKeyword = async () => {
     try {
-      if (!process.env.API_LINK) {
+      if (!process.env.NEXT_PUBLIC_API_LINK) {
         throw new Error("API link is not defined");
       }
-      const response = await fetch(process.env.API_LINK + "analise-lexica/adiciona-token ", {
+      const response = await fetch(process.env.NEXT_PUBLIC_API_LINK + "analise-lexica/adiciona-token ", {
         method: "POST", 
         headers: {
           "Content-Type": "application/json", 

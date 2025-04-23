@@ -46,11 +46,11 @@ print();  // Deve chamar a função print()
   // }
   
   async function consoleRun() {
-      if (!process.env.API_LINK) {
+      if (!process.env.NEXT_PUBLIC_API_LINK) {
         throw new Error("API link is not defined");
       }
 
-      fetch(process.env.API_LINK + "analise-lexica/divide-token", {
+      fetch(process.env.NEXT_PUBLIC_API_LINK + "analise-lexica/divide-token", {
         method: "POST", 
         headers: {
           "Content-Type": "application/json", 
@@ -105,10 +105,14 @@ print();  // Deve chamar a função print()
           color: '#fff',
           padding: 2,
           margin: 2,
+          overflowY: 'auto',
+          border: '1px solid #333',
+          borderRadius: '4px',
+          fontFamily: 'monospace',
         }}
       >
         {log.map((line, index) => (
-          <Typography key={index} variant="body2">
+          <Typography key={index} variant="body2" sx={{ whiteSpace: 'pre-wrap' }}>
             {line}
           </Typography>
         ))}
