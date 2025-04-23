@@ -17,32 +17,57 @@ print();  // Deve chamar a função print()
 `);
   const [log, setLog] = useState<string[]>([]);
 
-  function ConsoleRun() {
-    const capturedLogs: string[] = [];
-    const originalConsoleLog = console.log;
+  // function ConsoleRun() {
+  //   const capturedLogs: string[] = [];
+  //   const originalConsoleLog = console.log;
 
-    // Override console.log to capture logs
-    console.log = function (...args) {
-      capturedLogs.push(args.join(' '));
-      originalConsoleLog.apply(console, args);
-    };
+  //   // Override console.log to capture logs
+  //   console.log = function (...args) {
+  //     capturedLogs.push(args.join(' '));
+  //     originalConsoleLog.apply(console, args);
+  //   };
 
-    try {
-      // Use Function constructor instead of eval for better safety
-      const func = new Function(code);
-      func();
-    } catch (error) {
-      if (error instanceof Error) {
-        capturedLogs.push(`~ Error: ${error.message}`);
-      } else {
-        capturedLogs.push('~ Error: An unknown error occurred');
+  //   try {
+  //     // Use Function constructor instead of eval for better safety
+  //     const func = new Function(code);
+  //     func();
+  //   } catch (error) {
+  //     if (error instanceof Error) {
+  //       capturedLogs.push(`~ Error: ${error.message}`);
+  //     } else {
+  //       capturedLogs.push('~ Error: An unknown error occurred');
+  //     }
+  //   }
+
+  //   // Restore original console.log
+  //   console.log = originalConsoleLog;
+
+  //   setLog(capturedLogs);
+  // }
+  
+  async function consoleRun() {
+      if (!process.env.API_LINK) {
+        throw new Error("API link is not defined");
       }
-    }
 
-    // Restore original console.log
-    console.log = originalConsoleLog;
+      fetch(process.env.API_LINK + "analise-lexica/divide-token", {
+        method: "POST", 
+        headers: {
+          "Content-Type": "application/json", 
+        }, 
+        body: JSON.stringify({ snippet: code }),
+      }).then(response => {
+        if (!response.ok) {
+          throw new Error(`Error: ${response.statusText}`)
+        }
+        return response.json()
+      }).then(data => {
+        if (!data.is_success) {
+          throw new Error(data.message)
+        }
+        setLog([data.message, ...data.response])
 
-    setLog(capturedLogs);
+      }).catch(error => console.error("Failed to send keyword: ", error))
   }
 
   return (
@@ -88,7 +113,7 @@ print();  // Deve chamar a função print()
           </Typography>
         ))}
       </Box>
-      <Button onClick={ConsoleRun} variant="contained" sx={{ margin: 2 }}>
+      <Button onClick={consoleRun} variant="contained" sx={{ margin: 2 }}>
         Execute
       </Button>
     </Box>
