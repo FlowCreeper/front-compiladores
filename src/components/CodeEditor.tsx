@@ -47,6 +47,7 @@ print();  // Deve chamar a função print()
   
   async function consoleRun() {
       if (!process.env.NEXT_PUBLIC_API_LINK) {
+        setLog(["Failed to find API link"])
         throw new Error("API link is not defined");
       }
 
@@ -58,7 +59,7 @@ print();  // Deve chamar a função print()
         body: JSON.stringify({ snippet: code }),
       }).then(response => {
         if (!response.ok) {
-          throw new Error(`Error: ${response.statusText}`)
+          throw new Error(response.statusText)
         }
         return response.json()
       }).then(data => {
@@ -67,7 +68,14 @@ print();  // Deve chamar a função print()
         }
         setLog([data.message, ...data.response])
 
-      }).catch(error => console.error("Failed to send keyword: ", error))
+      }).catch(error => {
+        if (error.message == "Not Found") {
+          setLog(["Failed to send code", "Failed to find the API"])
+        } else {
+          setLog(["Failed to send code", error.message])
+        }
+        console.error("Failed to send code: ", error)
+      })
   }
 
   return (
