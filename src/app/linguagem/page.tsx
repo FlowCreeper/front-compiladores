@@ -34,8 +34,11 @@ export default function Linguagem() {
 
       const result = await response.json();
       console.log(result);
-    } catch (error) {
-      
+    } catch (error: any) {
+      if (error.message == "Not Found") {
+        setSnackMessage("Failed to find the API")
+        setSnackOpen(true)
+      }
       console.error("Failed to send keyword: ", error);
     }
   };
