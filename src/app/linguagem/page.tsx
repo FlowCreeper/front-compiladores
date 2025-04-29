@@ -46,8 +46,7 @@ export default function Linguagem() {
   return (
     <Box
       sx={{
-        height: "90vh",
-        width: "99vw",
+        height: "90.9vh",
         padding: 2,
         margin: 0,
         bgcolor: "#1e1e1e",

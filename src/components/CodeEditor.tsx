@@ -8,12 +8,11 @@ import { Box, Button, Typography } from '@mui/material';
 const MonacoEditor = dynamic(() => import('@monaco-editor/react'), { ssr: false });
 
 export default function CodeEditor() {
-  const [code, setCode] = useState(`// Experimente escrever funções aqui
-function print() {
-  console.log('Função print chamada');
+  const [code, setCode] = useState(`function print() {
+  console.log('Função print chamada')
 }
 
-print();  // Deve chamar a função print()
+print()
 `);
   const [log, setLog] = useState<string[]>([]);
 
@@ -50,39 +49,46 @@ print();  // Deve chamar a função print()
         setLog(["Failed to find API link"])
         throw new Error("API link is not defined");
       }
+      
 
       fetch(process.env.NEXT_PUBLIC_API_LINK + "analise-lexica/divide-token", {
-        method: "POST", 
+        method: "POST",
         headers: {
-          "Content-Type": "application/json", 
-        }, 
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({ snippet: code }),
-      }).then(response => {
+      })
+      .then(response => {
         if (!response.ok) {
-          throw new Error(response.statusText)
+          throw new Error(response.statusText);
         }
         return response.json()
-      }).then(data => {
-        if (!data.is_success) {
-          throw new Error(data.message)
-        }
-        setLog([data.message, ...data.response])
-
-      }).catch(error => {
-        if (error.message == "Not Found") {
-          setLog(["Failed to send code", "Failed to find the API"])
-        } else {
-          setLog(["Failed to send code", error.message])
-        }
-        console.error("Failed to send code: ", error)
       })
+      .then(data => {
+        if (!data.is_success) {
+          throw new Error(data.message);
+        }
+      
+        const tokensLog = (data.response as { token: string, type: string }[]).map((tokenObj) => 
+          `${tokenObj.token} => ${tokenObj.type}`
+        );
+      
+        setLog([data.message, ...tokensLog]);
+      })
+      .catch(error => {
+        if (error.message == "Not Found") {
+          setLog(["Failed to send code", "Failed to find the API"]);
+        } else {
+          setLog(["Failed to send code", error.message]);
+        }
+        console.error("Failed to send code: ", error);
+      });
   }
 
   return (
     <Box
       sx={{
-        height: '90vh',
-        width: '99vw',
+        height: '90.9vh',
         padding: 0,
         margin: 0,
         bgcolor: '#1e1e1e',
