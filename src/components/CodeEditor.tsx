@@ -18,7 +18,6 @@ int main() {
   return 0;
 }
 
-print()
 `);
   const [log, setLog] = useState<string[]>([]);
 
