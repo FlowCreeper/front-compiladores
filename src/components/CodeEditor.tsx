@@ -8,17 +8,14 @@ import { Box, Button, Typography } from '@mui/material';
 const MonacoEditor = dynamic(() => import('@monaco-editor/react'), { ssr: false });
 
 export default function CodeEditor() {
-  const [code, setCode] = useState(`#include <stdio.h>
+  const [code, setCode] = useState(`
+#include <stdio.h>
 
-void print() {
-    printf("Função print chamada\n");
-}
+void print() { printf("Função print chamada"); }
 
 int main() {
-    print(); // Chamada da função
-    return 0;
-}
-')
+  print();
+  return 0;
 }
 
 print()
