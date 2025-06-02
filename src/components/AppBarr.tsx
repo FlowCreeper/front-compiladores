@@ -40,9 +40,9 @@ export default function CustomAppBar() {
       <AppBar position="static" sx={{ backgroundColor: "black" }} elevation={3}>
         <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
           {/* Nome do site */}
-          <Typography variant="h6" component="div" sx={{ fontWeight: 'bold' }}>
-            <a href='/' style={{textDecoration: "none"}}> Codiguin </a>
-          </Typography>
+          <Button href='/' sx={{ fontWeight: 'bold', fontSize: '125%' }}>
+            Codiguin
+          </Button>
 
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             {/* Link para página de serviços */}
@@ -61,7 +61,7 @@ export default function CustomAppBar() {
                 },
               }}
               component={Link}
-              href="https://www.youtube.com/watch?v=BBGEG21CGo0"
+              href="/xD"
             >
               Não clique
             </Button>

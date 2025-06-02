@@ -8,12 +8,11 @@ import { Box, Button, Typography } from '@mui/material';
 const MonacoEditor = dynamic(() => import('@monaco-editor/react'), { ssr: false });
 
 export default function CodeEditor() {
-  const [code, setCode] = useState(`// Experimente escrever funções aqui
-function print() {
-  console.log('Função print chamada');
+  const [code, setCode] = useState(`function print() {
+  console.log('Função print chamada')
 }
 
-print();  // Deve chamar a função print()
+print()
 `);
   const [log, setLog] = useState<string[]>([]);
 
@@ -47,34 +46,45 @@ print();  // Deve chamar a função print()
   
   async function consoleRun() {
       if (!process.env.NEXT_PUBLIC_API_LINK) {
+        setLog(["Failed to find API link"])
         throw new Error("API link is not defined");
       }
+      
 
-      fetch(process.env.NEXT_PUBLIC_API_LINK + "analise-lexica/divide-token", {
-        method: "POST", 
+      fetch(process.env.NEXT_PUBLIC_API_LINK + "analise-completa", {
+        method: "POST",
         headers: {
-          "Content-Type": "application/json", 
-        }, 
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({ snippet: code }),
-      }).then(response => {
+      })
+      .then(response => {
         if (!response.ok) {
-          throw new Error(`Error: ${response.statusText}`)
+          throw new Error(response.statusText);
         }
         return response.json()
-      }).then(data => {
+      })
+      .then(data => {
         if (!data.is_success) {
-          throw new Error(data.message)
+          throw new Error(data.message);
         }
-        setLog([data.message, ...data.response])
-
-      }).catch(error => console.error("Failed to send keyword: ", error))
+      
+        setLog([data.message, data.response]);
+      })
+      .catch(error => {
+        if (error.message == "Not Found") {
+          setLog(["Failed to send code", "Failed to find the API"]);
+        } else {
+          setLog(["Failed to send code", error.message]);
+        }
+        console.error("Failed to send code: ", error);
+      });
   }
 
   return (
     <Box
       sx={{
-        height: '90vh',
-        width: '99vw',
+        height: '90.9vh',
         padding: 0,
         margin: 0,
         bgcolor: '#1e1e1e',
