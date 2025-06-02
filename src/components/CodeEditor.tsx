@@ -93,7 +93,7 @@ print()
       }}
     >
       <MonacoEditor
-        defaultLanguage="typescript"
+        defaultLanguage="C"
         theme="vs-dark"
         value={code}
         onChange={(value) => setCode(value || '')}
