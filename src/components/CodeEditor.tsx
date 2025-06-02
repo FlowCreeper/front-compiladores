@@ -51,7 +51,7 @@ print()
       }
       
 
-      fetch(process.env.NEXT_PUBLIC_API_LINK + "analise-lexica/divide-token", {
+      fetch(process.env.NEXT_PUBLIC_API_LINK + "analise-completa", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -69,11 +69,7 @@ print()
           throw new Error(data.message);
         }
       
-        const tokensLog = (data.response as { token: string, type: string }[]).map((tokenObj) => 
-          `${tokenObj.token} => ${tokenObj.type}`
-        );
-      
-        setLog([data.message, ...tokensLog]);
+        setLog([data.message, data.response]);
       })
       .catch(error => {
         if (error.message == "Not Found") {
